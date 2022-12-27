@@ -1,0 +1,56 @@
+version: "3"
+services:
+  
+  ui:
+   build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+   ports:
+    -  3000:3000
+   container_name: frontend
+   networks:
+    -  cilist-networks
+   volumes:
+    -  ./frontend/src:/usr/app/src
+    -  ./frontend/build:/usr/app/build
+   depends_on:
+    - backend
+   environment:
+    REACT_APP_BACKEND_URL: http://localhost:6000
+   stdin_open: true
+   tty: true
+
+  db:
+    image: triagungtio/cilist-db
+    ports:
+      - 3300:3306
+    container_name: mysql
+    networks:
+      - cilist-networks
+    volumes:
+      - mysql-data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=people
+      - MYSQL_DATABASE=people
+      - MYSQL_USER=people
+      - MYSQL_PASSWORD=people
+
+  backend:
+   build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+   ports:
+     - 6000:6000
+   container_name: backend
+   networks:
+     - cilist-networks
+   volumes:
+    - ./backend/src:/usr/app/src
+   depends_on:
+    - db
+
+networks:
+  cilist-networks:
+    
+volumes:
+  mysql-data:
