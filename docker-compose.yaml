@@ -16,7 +16,7 @@ services:
    depends_on:
     - backend
    environment:
-    - REACT_APP_BACKEND_URL=http://${INSTANCE_IP}:8080
+    - REACT_APP_BACKEND_URL=http://${INSTANCE_IP}:8000
    stdin_open: true
    tty: true
 
