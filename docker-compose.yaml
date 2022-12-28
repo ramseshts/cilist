@@ -16,12 +16,12 @@ services:
    depends_on:
     - backend
    environment:
-    REACT_APP_BACKEND_URL: http://localhost:6000
+    REACT_APP_BACKEND_URL: http://localhost:8000
    stdin_open: true
    tty: true
 
   db:
-    image: triagungtio/cilist-db 
+    image: triagungtio/db-cilist
     ports:
       - 3300:3306
     container_name: mysql
@@ -35,7 +35,7 @@ services:
       context: ./backend
       dockerfile: Dockerfile.dev
    ports:
-     - 6000:6000
+     - 8000:8000
    container_name: backend
    networks:
      - cilist-networks
@@ -44,13 +44,11 @@ services:
    depends_on:
     - db
    environment:
-      - BASE_URL_PORT=6000
       - MYSQL_ROOT_PASSWORD=people
       - DATABASE_USERNAME=people
       - DATABASE_PASSWORD=people
       - DATABASE_DATABASE=people
       - DATABASE_HOST=db
-      - DATABASE_PORT=3306
 
 networks:
   cilist-networks:
