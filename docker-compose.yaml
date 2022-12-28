@@ -25,10 +25,6 @@ services:
     ports:
       - 3300:3306
     container_name: mysql
-    logging:
-        driver: journald
-        options:
-            tag: mytag
     networks:
       - cilist-networks
     volumes:
@@ -41,10 +37,6 @@ services:
    ports:
      - 6000:6000
    container_name: backend
-   logging:
-      driver: journald
-      options:
-         tag: mytag2
    networks:
      - cilist-networks
    volumes:

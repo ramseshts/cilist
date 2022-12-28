@@ -9,7 +9,11 @@ dotenv.config()
 const BASE_URL_PORT = process.env.BASE_URL_PORT
 
 const app = express();
-app.use(cors());
+app.use(cors(
+    {
+        origin: "*",
+    }
+));
 app.use(express.json());
 app.use(UserRoute);
 
