@@ -33,11 +33,6 @@ services:
       - cilist-networks
     volumes:
       - mysql-data:/var/lib/mysql
-    environment:
-      - MYSQL_ROOT_PASSWORD=people
-      - MYSQL_DATABASE=people
-      - MYSQL_USER=people
-      - MYSQL_PASSWORD=people
 
   backend:
    build:
@@ -56,6 +51,14 @@ services:
     - ./backend/src:/usr/app/src
    depends_on:
     - db
+   environment:
+      - BASE_URL_PORT=6000
+      - MYSQL_ROOT_PASSWORD=people
+      - DATABASE_USERNAME=people
+      - DATABASE_PASSWORD=people
+      - DATABASE_DATABASE=people
+      - DATABASE_HOST=db
+      - DATABASE_PORT=3306
 
 networks:
   cilist-networks:
