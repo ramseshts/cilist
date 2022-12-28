@@ -21,7 +21,7 @@ services:
    tty: true
 
   db:
-    image: triagungtio/db-cilist
+    image: triagungtio/cilist-db 
     ports:
       - 3300:3306
     container_name: mysql
