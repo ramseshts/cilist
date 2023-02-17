@@ -1,58 +1,52 @@
-version: "3"
-services:
-  
-  ui:
-   build:
-      context: ./frontend
-      dockerfile: Dockerfile.dev
-   ports:
-    -  3000:3000
-   container_name: frontend
-   networks:
-    -  cilist-networks
-   volumes:
-    -  ./frontend/src:/usr/app/src
-    -  ./frontend/build:/usr/app/build
-   depends_on:
-    - backend
-   environment:
-    - REACT_APP_BACKEND_URL=http://${INSTANCE_IP}:8000
-   stdin_open: true
-   tty: true
+version: '3.8'
 
-  db:
-    image: triagungtio/db-cilist
+services:
+  database:
+    container_name: cilist-db
+    image: ramses01/cilist-database:latest
+    environment:
+      - MYSQL_ROOT_PASSWORD=people
+      - MYSQL_DATABASE=people
+      - MYSQL_USER=people
+      - MYSQL_PASSWORD=people
     ports:
       - 3306:3306
-    container_name: mysql
     networks:
-      - cilist-networks
+      - shared-network
     volumes:
-      - mysql-data:/var/lib/mysql
-
+      - db_data:/var/lib/mysql
+  
   backend:
-   build:
-      context: ./backend
-      dockerfile: Dockerfile.dev
-   ports:
-     - 8000:8000
-   container_name: backend
-   networks:
-     - cilist-networks
-   volumes:
-    - ./backend/src:/usr/app/src
-   depends_on:
-    - db
-   environment:
-      - BASE_URL_PORT=8000
+    image: ramses01/cilist-backend-dev:latest
+    ports:
+      - 5001:5001
+    depends_on:
+      - database
+    environment:
+      - BASE_URL_PORT=5001
       - MYSQL_ROOT_PASSWORD=people
       - DATABASE_USERNAME=people
       - DATABASE_PASSWORD=people
       - DATABASE_DATABASE=people
-      - DATABASE_HOST=db
+      - DATABASE_HOST=database
+      - DATABASE_PORT=3306
+    networks:
+      - shared-network
+
+  frontend:
+    image: ramses01/cilist-frontend-dev:latest
+    ports:
+      - 3000:3000
+    environment:
+      - REACT_APP_BACKEND_URL=http://localhost:5001
+    depends_on:
+      - backend
+    networks:
+      - shared-network
 
 networks:
-  cilist-networks:
-    
+  shared-network:
+
 volumes:
-  mysql-data:
+  db_data:
+    
